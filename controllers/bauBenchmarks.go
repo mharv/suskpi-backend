@@ -27,3 +27,23 @@ func GetBauBenchmarks(c *gin.Context) {
 
 	c.IndentedJSON(http.StatusOK, dat)
 }
+
+func GetBauBenchmarkById(c *gin.Context) {
+	id := c.Param("id")
+
+	db.ConnectToDb()
+
+	result, err := db.GetDataById("dbo.BauTable", id)
+	if err != nil {
+		log.Fatal("Error reading single Bau benchmark: ", err.Error())
+	}
+
+	byt := []byte(result)
+	var dat []interface{}
+
+	if err := json.Unmarshal(byt, &dat); err != nil {
+		panic(err)
+	}
+
+	c.IndentedJSON(http.StatusOK, dat)
+}

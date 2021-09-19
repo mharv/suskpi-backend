@@ -76,6 +76,34 @@ func ConnectToDb() {
 // 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
 // }
 
+func GetDataById(table string, id string) (string, error) {
+	ctx := context.Background()
+
+	// Check if database is alive.
+	err := db.PingContext(ctx)
+	if err != nil {
+		return "-1", err
+	}
+
+	tsql := fmt.Sprintf("SELECT * FROM %s WHERE Id = %s", table, id)
+
+	// Execute query
+	rows, err := db.QueryContext(ctx, tsql)
+	if err != nil {
+		return "-1", err
+	}
+	defer rows.Close()
+
+	columns, err := rows.Columns()
+	if err != nil {
+		return "-1", err
+	}
+
+	result, err := convertToJson(rows, columns)
+
+	return result, err
+}
+
 func GetData(table string) (string, error) {
 	ctx := context.Background()
 
