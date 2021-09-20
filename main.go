@@ -17,6 +17,7 @@ func main() {
 	router.GET("/bauBenchmarks/:id", controllers.GetBauBenchmarkById)
 	router.GET("/projects/:id", controllers.GetProjectById)
 	// router.POST("/projects", controllers.CreateProject)
+	// router.POST("/bauBenchmarks", controllers.CreateBauBenchmark)
 
 	router.GET("/tests", controllers.GetTests)
 	router.POST("/tests", controllers.CreateTest)
