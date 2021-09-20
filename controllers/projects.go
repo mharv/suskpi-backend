@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"sus-kpi-backend/db"
@@ -46,4 +48,25 @@ func GetProjectById(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusOK, dat)
+}
+
+func CreateProject(c *gin.Context) {
+
+	db.ConnectToDb()
+
+	jsonData, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	response, err := db.PostNewItem("dbo.ProjectTable", jsonData)
+
+	var dat map[string]interface{}
+
+	if err := json.Unmarshal(response, &dat); err != nil {
+		panic(err)
+	}
+
+	c.IndentedJSON(http.StatusCreated, dat)
+
 }

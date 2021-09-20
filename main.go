@@ -16,9 +16,12 @@ func main() {
 	router.GET("/projects", controllers.GetProjects)
 	router.GET("/bauBenchmarks/:id", controllers.GetBauBenchmarkById)
 	router.GET("/projects/:id", controllers.GetProjectById)
-	// examples
+	// router.POST("/projects", controllers.CreateProject)
 
-	// router.GET("/albums/:id", controllers.GetAlbumByID)
+	router.GET("/tests", controllers.GetTests)
+	router.POST("/tests", controllers.CreateTest)
+
+	// examples
 	// router.POST("/albums", controllers.PostAlbums)
 
 	router.Run("localhost:8080")

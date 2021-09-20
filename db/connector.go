@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	_ "github.com/denisenkom/go-mssqldb"
 
@@ -14,6 +15,9 @@ import (
 )
 
 // https://docs.microsoft.com/en-us/azure/azure-sql/database/connect-query-go
+
+// revisit this later for sql refinement
+// https://www.calhoun.io/inserting-records-into-a-postgresql-database-with-gos-database-sql-package/
 
 var db *sql.DB
 
@@ -60,21 +64,50 @@ func ConnectToDb() {
 // 	c.IndentedJSON(http.StatusCreated, newAlbum)
 // }
 
-// // getAlbumByID locates the album whose ID value matches the id
-// // parameter sent by the client, then returns that album as a response.
-// func GetAlbumByID(c *gin.Context) {
-// 	id := c.Param("id")
+func PostNewItem(table string, requestBody []byte) ([]byte, error) {
 
-// 	// Loop over the list of albums, looking for
-// 	// an album whose ID value matches the parameter.
-// 	for _, a := range albums {
-// 		if a.ID == id {
-// 			c.IndentedJSON(http.StatusOK, a)
-// 			return
-// 		}
-// 	}
-// 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
-// }
+	// decode JSON into an iterable structure
+	c := make(map[string]json.RawMessage)
+	e := json.Unmarshal(requestBody, &c)
+	if e != nil {
+		panic(e)
+	}
+
+	// create tsql string
+	tsqlstart := fmt.Sprintf("INSERT INTO %s ( ", table)
+	tsqlend := fmt.Sprintf("VALUES ( ")
+
+	fmt.Println(len(c))
+
+	i := 1
+
+	for k, v := range c {
+		if i != len(c) {
+			tsqlstart = tsqlstart + string(k) + ", "
+			tsqlend = tsqlend + strings.Replace(string(v), "\"", "'", -1) + ", "
+		} else {
+			tsqlstart = tsqlstart + string(k)
+			tsqlend = tsqlend + strings.Replace(string(v), "\"", "'", -1)
+		}
+		i++
+	}
+
+	tsqlstart = tsqlstart + " ) "
+	tsqlend = tsqlend + " )"
+
+	tsql := tsqlstart + tsqlend
+
+	// output result to STDOUT
+	fmt.Println(tsql)
+
+	_, err := db.Exec(tsql)
+	if err != nil {
+		panic(err)
+	}
+
+	return requestBody, err
+
+}
 
 func GetDataById(table string, id string) (string, error) {
 	ctx := context.Background()
