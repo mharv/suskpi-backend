@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"os"
+	"strconv"
 	"sus-kpi-backend/controllers"
 
 	_ "github.com/denisenkom/go-mssqldb"
@@ -25,5 +28,18 @@ func main() {
 	// examples
 	// router.POST("/albums", controllers.PostAlbums)
 
-	router.Run("localhost:8080")
+	port := fmt.Sprint(getHTTPPort())
+
+	router.Run("localhost:" + port)
+}
+
+func getHTTPPort() int {
+	httpPort := 8080
+	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
+		httpPort, err := strconv.Atoi(val)
+		if err == nil {
+			return httpPort
+		}
+	}
+	return httpPort
 }
