@@ -68,5 +68,4 @@ func CreateProject(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusCreated, dat)
-
 }

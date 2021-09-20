@@ -19,15 +19,14 @@ func main() {
 	router.GET("/projects", controllers.GetProjects)
 	router.GET("/bauBenchmarks/:id", controllers.GetBauBenchmarkById)
 	router.GET("/projects/:id", controllers.GetProjectById)
-	// router.POST("/projects", controllers.CreateProject)
-	// router.POST("/bauBenchmarks", controllers.CreateBauBenchmark)
+	router.POST("/projects", controllers.CreateProject)
+	router.POST("/bauBenchmarks", controllers.CreateBauBenchmark)
 
+	// testing routes
 	router.GET("/tests", controllers.GetTests)
 	router.POST("/tests", controllers.CreateTest)
 
-	// examples
-	// router.POST("/albums", controllers.PostAlbums)
-
+	// get port if on azure
 	port := fmt.Sprint(getHTTPPort())
 
 	router.Run("localhost:" + port)

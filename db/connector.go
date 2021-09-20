@@ -47,23 +47,6 @@ func ConnectToDb() {
 	fmt.Printf("Connected!\n")
 }
 
-// examples
-
-// // postAlbums adds an album from JSON received in the request body.
-// func PostAlbums(c *gin.Context) {
-// 	var newAlbum models.Album
-
-// 	// Call BindJSON to bind the received JSON to
-// 	// newAlbum.
-// 	if err := c.BindJSON(&newAlbum); err != nil {
-// 		return
-// 	}
-
-// 	// Add the new album to the slice.
-// 	albums = append(albums, newAlbum)
-// 	c.IndentedJSON(http.StatusCreated, newAlbum)
-// }
-
 func PostNewItem(table string, requestBody []byte) ([]byte, error) {
 
 	// decode JSON into an iterable structure
@@ -77,10 +60,8 @@ func PostNewItem(table string, requestBody []byte) ([]byte, error) {
 	tsqlstart := fmt.Sprintf("INSERT INTO %s ( ", table)
 	tsqlend := fmt.Sprintf("VALUES ( ")
 
-	fmt.Println(len(c))
-
+	// fmt.Println(len(c))
 	i := 1
-
 	for k, v := range c {
 		if i != len(c) {
 			tsqlstart = tsqlstart + string(k) + ", "
@@ -97,16 +78,13 @@ func PostNewItem(table string, requestBody []byte) ([]byte, error) {
 
 	tsql := tsqlstart + tsqlend
 
-	// output result to STDOUT
-	fmt.Println(tsql)
-
+	// execute the query
 	_, err := db.Exec(tsql)
 	if err != nil {
 		panic(err)
 	}
 
 	return requestBody, err
-
 }
 
 func GetDataById(table string, id string) (string, error) {

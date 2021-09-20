@@ -68,5 +68,4 @@ func CreateBauBenchmark(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusCreated, dat)
-
 }
