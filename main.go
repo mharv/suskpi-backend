@@ -11,6 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// see below link for building unix exe on windows
+// https://medium.com/@utranand/building-golang-package-for-linux-from-windows-22fa23764808
+
 func main() {
 
 	// Routes
