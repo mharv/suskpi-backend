@@ -19,7 +19,7 @@
   },
   "customHandler": {
     "description": {
-      "defaultExecutablePath": "sus-kpi-backend.exe",
+      "defaultExecutablePath": "sus-kpi-backend",
       "workingDirectory": "",
       "arguments": []
     },
